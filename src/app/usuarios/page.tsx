@@ -1,4 +1,4 @@
-import FormCadastroUsuario from "./components/Form";
+import FormCadastroUsuario from "../../components/Form";
 
 export default function UsuariosPage() {
     return (
