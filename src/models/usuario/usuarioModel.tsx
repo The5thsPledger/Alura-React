@@ -1,12 +1,12 @@
-import { PermissaoModel } from './permissaoModel';
+import { PermissaoModel } from '../permissaoModel';
 
 export class UsuarioModel {
-    id: string;
+    id?: string;
     nome: string;
     email: string;
     permissoes = new Array<PermissaoModel>();
     constructor(
-        id: string, nome: string, email: string, permissoes = new Array<PermissaoModel>()
+        nome: string, email: string, permissoes = new Array<PermissaoModel>(), id?: string
     ) {
         this.id = id;
         this.nome = nome;

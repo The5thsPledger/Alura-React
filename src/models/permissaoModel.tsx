@@ -1,8 +1,8 @@
 export class PermissaoModel {
-    id: string;
+    id?: string;
     nome: string;
     constructor(
-        id: string, nome: string
+        nome: string, id?: string
     ) {
         this.id = id;
         this.nome = nome;

@@ -1,4 +1,4 @@
-import { FornecedorModel } from "./fornecedorModel";
+import { FornecedorModel } from "../fornecedorModel";
 import { ProdutoCaracteristicaModel } from "./produtoCaracteristicaModel";
 import { ProdutoImagemModel } from "./produtoImagemModel";
 

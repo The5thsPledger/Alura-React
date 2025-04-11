@@ -1,8 +1,8 @@
-import FormCadastroUsuario from "@/components/FormCadastroProduto";
+import FormCadastroUsuario from "@/components/FormCadastroUsuario";
 
 export default function UsuariosPage() {
     return (
-        <div className="flex justify-center items-center h-screen">
+        <div className="flex justify-center items-center">
             <FormCadastroUsuario />
         </div>
     )
