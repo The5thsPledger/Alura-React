@@ -1,12 +1,12 @@
 export class ProdutoImagemModel {
-    id: string;
+    id?: string;
     url: string;
     descricao: string;
     constructor(
-        id: string, nome: string, descricao: string
+        url: string, descricao: string, id?: string
     ) {
         this.id = id;
-        this.url = nome;
+        this.url = url;
         this.descricao = descricao;
     }
 }

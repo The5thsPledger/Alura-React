@@ -1,21 +1,54 @@
 "use client";
+import { FornecedorModel } from "@/models/fornecedorModel";
+import { PermissaoModel } from "@/models/permissaoModel";
+import { ProdutoCaracteristicaModel } from "@/models/produto/produtoCaracteristicaModel";
+import { ProdutoImagemModel } from "@/models/produto/produtoImagemModel";
+import { ProdutoModel } from "@/models/produto/produtoModel";
+import { UsuarioModel } from "@/models/usuario/usuarioModel";
+import httpRequest from "@/utils/httpRequest";
 import React from "react";
 
-export default function FormCadastroUsuario() {
+export default function FormCadastroProduto() {
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
-        const nome          = (document.getElementById("nome")          as HTMLInputElement).value;
-        const valor         = (document.getElementById("valor")         as HTMLInputElement).value;
-        const quantidade    = (document.getElementById("quantidade")    as HTMLInputElement).value;
-        const descricao     = (document.getElementById("descricao")     as HTMLInputElement).value;
-        const categoria     = (document.getElementById("categoria")     as HTMLInputElement).value;
-        console.log(`Nome: ${nome}, Valor: ${valor}`, `Quantidade: ${quantidade}`, `Descricao: ${descricao}`, `Categoria: ${categoria}`);
+        const nome                      = (document.getElementById("nome")                      as HTMLInputElement).value;
+        const valor                     = (document.getElementById("valor")                     as HTMLInputElement).valueAsNumber;
+        const quantidade                = (document.getElementById("quantidade")                as HTMLInputElement).valueAsNumber;
+        const descricao                 = (document.getElementById("descricao")                 as HTMLInputElement).value;
+        const categoria                 = (document.getElementById("categoria")                 as HTMLInputElement).value;
+
+        const idUsuario                 = (document.getElementById("id-usuario")                as HTMLInputElement).value;
+        const nomeUsuario               = (document.getElementById("nome-usuario")              as HTMLInputElement).value;
+        const emailUsuario              = (document.getElementById("email-usuario")             as HTMLInputElement).value;
+        const url                       = (document.getElementById("url")                       as HTMLInputElement).value;
+        const descricaoImagem           = (document.getElementById("descricao-imagem")          as HTMLInputElement).value;
+        const nomeCaracteristica        = (document.getElementById("nome-caracteristica")       as HTMLInputElement).value;
+        const descricaoCaracteristica   = (document.getElementById("descricao-caracteristica")  as HTMLInputElement).value;
+        const nomeFornecedor            = (document.getElementById("nome-fornecedor")           as HTMLInputElement).value;
+        const cnpj                      = (document.getElementById("cnpj")                      as HTMLInputElement).valueAsNumber;
+        const enderecoFornecedor        = (document.getElementById("endereco-fornecedor")       as HTMLInputElement).value;
+        const telefone                  = (document.getElementById("telefone")                  as HTMLInputElement).valueAsNumber;
+        const email                     = (document.getElementById("email")                     as HTMLInputElement).value;
+
+        httpRequest<ProdutoModel>(
+            "produtos", "POST", new ProdutoModel(
+                nome, valor, quantidade, descricao, categoria, 
+                new UsuarioModel(nomeUsuario, emailUsuario, new Array<PermissaoModel>(), idUsuario),
+                new Array<ProdutoImagemModel>(new ProdutoImagemModel(url, descricaoImagem)),
+                new Array<ProdutoCaracteristicaModel>(new ProdutoCaracteristicaModel(nomeCaracteristica, descricaoCaracteristica)),
+                new FornecedorModel(nomeFornecedor, enderecoFornecedor, cnpj, telefone, email)),
+            ).then(() => {
+                    alert("Produto cadastrado com sucesso!");
+            }).catch((error) => {
+                    console.error("Erro ao cadastrar produto:", error);
+            }
+        );
     };
     
     return (
         <form className="shadow-md rounded px-8 pt-6 pb-8 mb-4" onSubmit={handleSubmit}>
             <h2 className="text-lg font-bold mb-4">Cadastro de Produtos</h2>
-            <div className="mb-4">
+            <div className="mb-4"> {/* Nome */}
                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="nome">
                     Nome
                 </label>
@@ -24,13 +57,13 @@ export default function FormCadastroUsuario() {
                     type="text"
                     id="nome"
                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    placeholder="Digite seu nome"
+                    placeholder="Digite o nome do produto"
                     pattern="[A-Za-zÀ-ÖØ-öø-ÿ ]{2,100}"
                     title="O nome deve conter apenas letras e espaços, com um mínimo de 2 e um máximo de 100 caracteres."
                     autoComplete="name"
                 />
             </div>
-            <div className="mb-4">
+            <div className="mb-4"> {/* Valor */}
                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="valor">
                     Valor
                 </label>
@@ -48,7 +81,7 @@ export default function FormCadastroUsuario() {
                     title="O valor deve ser um número positivo com até duas casas decimais."
                 />
             </div>
-            <div className="mb-4">
+            <div className="mb-4"> {/* Quantidade */}
                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="quantidade">
                     Quantidade
                 </label>
@@ -66,7 +99,7 @@ export default function FormCadastroUsuario() {
                     title="A quantidade deve ser um número inteiro positivo."
                 />
             </div>
-            <div className="mb-4">
+            <div className="mb-4"> {/* Descrição */}
                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="descricao">
                     Descrição
                 </label>
@@ -77,11 +110,12 @@ export default function FormCadastroUsuario() {
                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     placeholder="Digite a descrição do produto"
                     autoComplete="descricao"
-                    pattern="^[A-Za-zÀ-ÖØ-öø-ÿ0-9.,;:!? ]{10,255}$"
-                    title="A descrição deve conter entre 10 e 255 caracteres, incluindo letras, números e alguns caracteres especiais."
+                    minLength={10}
+                    maxLength={255}
+                    title="A descrição deve conter entre 10 e 255 caracteres."
                 />
             </div>
-            <div className="mb-4">
+            <div className="mb-4"> {/* Categoria */}
                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="categoria">
                     Categoria
                 </label>
@@ -96,8 +130,24 @@ export default function FormCadastroUsuario() {
                     autoComplete="categoria"
                 />
             </div>
+            <h3 className="text-lg font-bold mb-4">Usuário</h3>
+            <div className="mb-4"> {/* Usuário */}
+                <label htmlFor="id-usuario">
+                    Usuário
+                </label>
+                <select
+                    required
+                    id="id-usuario"
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    defaultValue="3d0e821c-0ea3-447c-95a7-1a1e2997bb8d"
+                >
+                    <option value="3d0e821c-0ea3-447c-95a7-1a1e2997bb8d">John Doe</option>
+                </select>
+                <input type="hidden" id="nome-usuario" value="John Doe" />
+                <input type="hidden" id="email-usuario" value="teste0@teste.com" />
+            </div>
             <h3 className="text-lg font-bold mb-4">Imagens do Produto</h3>
-            <div className="mb-4">
+            <div className="mb-4"> {/* URL */}
                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="url">
                     URL
                 </label>
@@ -108,9 +158,17 @@ export default function FormCadastroUsuario() {
                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     placeholder="Digite a URL da Imagem do Produto"
                     autoComplete="url"
+                    pattern="https?://.+"
+                    title="A URL deve começar com http:// ou https:// e conter pelo menos 3 caracteres."
+                    minLength={11}
+                    onChange={(event) => {
+                        if (!(event.target.value.startsWith("http://") || event.target.value.startsWith("https://"))) {
+                            event.target.value = "http://" + event.target.value;
+                        }
+                    }}
                 />
             </div>
-            <div className="mb-4">
+            <div className="mb-4"> {/* Descrição da Imagem */}
                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="descricao-imagem">
                     Descrição da Imagem
                 </label>
@@ -126,7 +184,7 @@ export default function FormCadastroUsuario() {
                 />
             </div>
             <h3 className="text-lg font-bold mb-4">Características do Produto</h3>
-            <div className="mb-4">
+            <div className="mb-4"> {/* Nome da Característica */}
                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="nome-caracteristica">
                     Nome da Característica
                 </label>
@@ -141,7 +199,7 @@ export default function FormCadastroUsuario() {
                     autoComplete="nome-caracteristica"
                 />
             </div>
-            <div className="mb-4">
+            <div className="mb-4"> {/* Descrição da Caracteristica */}
                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="descricao-caracteristica">
                     Descrição da Caracteristica
                 </label>
@@ -157,7 +215,7 @@ export default function FormCadastroUsuario() {
                 />
             </div>
             <h3 className="text-lg font-bold mb-4">Fornecedor do Produto</h3>
-            <div className="mb-4">
+            <div className="mb-4"> {/* Nome do Fornecedor */}
                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="nome-fornecedor">
                     Nome do Fornecedor
                 </label>
@@ -172,7 +230,7 @@ export default function FormCadastroUsuario() {
                     autoComplete="nome-fornecedor"
                 />
             </div>
-            <div className="mb-4">
+            <div className="mb-4"> {/* CNPJ */}
                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="cnpj">
                     CNPJ
                 </label>
@@ -189,7 +247,7 @@ export default function FormCadastroUsuario() {
                     autoComplete="cnpj"
                 />
             </div>
-            <div className="mb-4">
+            <div className="mb-4"> {/* Endereço do Fornecedor */}
                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="endereco-fornecedor">
                     Endereço do Fornecedor
                 </label>
@@ -204,7 +262,7 @@ export default function FormCadastroUsuario() {
                     title="o endereço deve conter entre 10 e 255 caracteres, incluindo letras, números e alguns caracteres especiais."
                 />
             </div>
-            <div className="mb-4">
+            <div className="mb-4"> {/* Telefone */}
                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="telefone">
                     Telefone
                 </label>
@@ -221,7 +279,7 @@ export default function FormCadastroUsuario() {
                     autoComplete="telefone"
                 />
             </div>
-            <div className="mb-4">
+            <div className="mb-4"> {/* E-mail do Fornecedor */}
                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
                     E-mail do Fornecedor
                 </label>

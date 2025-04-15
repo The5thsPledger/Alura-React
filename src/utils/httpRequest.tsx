@@ -13,7 +13,7 @@ export default async function httpRequest<T>(
             body: body ? JSON.stringify(body) : null,
         });
         if (!response.ok) {
-            throw new Error('Network response was not ok');
+            throw new Error('Network response was not ok:' + response.statusText + " - " + await response.text());
         }
         return await response.json();
     } catch (error) {

@@ -1,9 +1,9 @@
 export class ProdutoCaracteristicaModel {
-    id: string;
+    id?: string;
     nome: string;
     descricao: string;
     constructor(
-        id: string, nome: string, descricao: string
+        nome: string, descricao: string, id?: string
     ) {
         this.id = id;
         this.nome = nome;
