@@ -1,35 +1,31 @@
 "use client";
 import { PermissaoModel } from "@/models/permissaoModel";
 import CriarUsuarioModel from "@/models/usuario/criarUsuarioModel";
+import ResponseCriarUsuarioModel from "@/models/usuario/responseCriarUsuarioModel";
+import httpRequest from "@/utils/httpRequest";
 import React from "react";
 
 export default function FormCadastroUsuario() {
-    const handleSubmit = (event: React.FormEvent) => {
+    const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
         const nome  = (document.getElementById("nome")  as HTMLInputElement).value;
         const email = (document.getElementById("email") as HTMLInputElement).value;
         const senha = (document.getElementById("senha") as HTMLInputElement).value;
         const permissoes = new Array<PermissaoModel>();
         permissoes.push(new PermissaoModel("admin"));
-        console.log(`Nome: ${nome}, Email: ${email}, Senha: ${senha}`);
 
-        const httpRequest = new XMLHttpRequest();
-        httpRequest.open("POST", "http://127.0.0.1:3000/api/usuarios", true);
-        httpRequest.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-        httpRequest.setRequestHeader("Accept", "application/json");
-        httpRequest.setRequestHeader("Access-Control-Allow-Origin", "*");
-
-        httpRequest.send(JSON.stringify(new CriarUsuarioModel(nome, email, senha, permissoes)));
-        httpRequest.onreadystatechange = function () {
-            if (httpRequest.readyState === 4 && httpRequest.status === 201) {
-                alert("Usuário cadastrado com sucesso!");
-            } else if (httpRequest.readyState === 4) {
-                alert(
-                    "Erro ao cadastrar usuário: " 
-                    + httpRequest.statusText + " - " + JSON.parse(httpRequest.responseText).mensagem
-                );
+        const usuario = new CriarUsuarioModel(nome, email, senha, permissoes);
+        httpRequest<CriarUsuarioModel, ResponseCriarUsuarioModel>("usuarios", "POST", usuario)
+        .then((response) => {
+            if (response.mensagem) {
+                alert(response.mensagem);
+                return;
             }
-        }
+        })
+        .catch((error) => {
+            console.error("Erro ao cadastrar usuário:", error);
+            alert("Erro ao cadastrar usuário: " + error.mensagem);
+        });
     };
     
     return (

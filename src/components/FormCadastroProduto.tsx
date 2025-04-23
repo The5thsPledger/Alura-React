@@ -30,7 +30,7 @@ export default function FormCadastroProduto() {
         const telefone                  = (document.getElementById("telefone")                  as HTMLInputElement).valueAsNumber;
         const email                     = (document.getElementById("email")                     as HTMLInputElement).value;
 
-        httpRequest<ProdutoModel>(
+        httpRequest<ProdutoModel, ProdutoModel>(
             "produtos", "POST", new ProdutoModel(
                 nome, valor, quantidade, descricao, categoria, 
                 new UsuarioModel(nomeUsuario, emailUsuario, new Array<PermissaoModel>(), idUsuario),

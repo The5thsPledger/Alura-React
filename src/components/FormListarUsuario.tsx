@@ -2,7 +2,6 @@ import { UsuarioModel } from "@/models/usuario/usuarioModel";
 import React from "react";
 
 export default function FormListarUsuario({ user }: { user: UsuarioModel }) {
-    
     return (
         <form className="shadow-md rounded px-8 pt-6 pb-8 mb-4">
             <div className="mb-4">
